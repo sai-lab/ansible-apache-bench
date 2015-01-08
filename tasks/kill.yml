@@ -1,0 +1,13 @@
+---
+- hosts: client
+  gather_facts: no
+  tasks:
+    - name: kill -9 bench
+      shell: kill -9 `ps ax | grep bench | head -1 | awk '{print $1}'`
+      ignore_errors: yes
+      when: inventory_hostname != ping_host
+
+    - name: kill -9 httping
+      shell: kill -9 `ps ax | grep httping | head -1 | awk '{print $1}'`
+      ignore_errors: yes
+      when: inventory_hostname == ping_host

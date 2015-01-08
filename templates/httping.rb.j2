@@ -1,0 +1,33 @@
+#!/usr/bin/env ruby
+
+require 'benchmark'
+require 'net/http'
+
+ENV['TZ'] = 'Asia/Tokyo'
+ping_time = {{ ping_time }}
+
+start = Time.now
+threads = []
+results = []
+
+loop do
+  now = Time.now
+  break if (now - start) > ping_time
+  threads << Thread.new(now) do |now|
+    begin
+      result = Benchmark::realtime { Net::HTTP.get('{{ host }}', '/{{ path }}') }
+      results << [now, result]
+    rescue Timeout::Error
+    end
+  end
+  sleep(1)
+end
+
+threads.each { |thread| thread.join }
+results = results.sort { |a, b| a[0] <=> b[0] }
+
+log = File::open('/home/ansible/bench/httping_time.csv', 'w')
+results.each do |result|
+  log.puts "#{result[0].strftime('%H:%M:%S')},#{result[1]}"
+end
+log.close

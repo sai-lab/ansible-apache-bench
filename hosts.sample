@@ -1,0 +1,23 @@
+[server]
+192.168.1.[21:29]
+
+[client]
+192.168.1.1
+
+192.168.1.31  sleep=0    wait=510
+192.168.1.32  sleep=30   wait=450
+192.168.1.33  sleep=60   wait=390
+192.168.1.34  sleep=90   wait=330
+192.168.1.35  sleep=120  wait=270
+192.168.1.36  sleep=150  wait=210
+192.168.1.37  sleep=180  wait=150
+192.168.1.38  sleep=210  wait=90
+192.168.1.39  sleep=240  wait=30
+
+[client:vars]
+host=192.168.1.11
+path=index.html
+requests=100000
+concurrency=100
+ping_host=192.168.1.1
+ping_time=510

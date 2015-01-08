@@ -1,0 +1,36 @@
+---
+- hosts: client
+  vars:
+    dest: '{{ ansible_env.HOME }}/bench'
+  tasks:
+    - name: mkdir bench
+      file:
+        path={{ dest }}
+        mode=0775
+        state=directory
+
+    - name: scp bench.sh
+      template:
+        src=../templates/bench.sh.j2
+        dest={{ dest }}/bench.sh
+        mode=0775
+      when: inventory_hostname != ping_host
+
+    - name: scp httping.rb
+      template:
+        src=../templates/httping.rb.j2
+        dest={{ dest }}/httping.rb
+        mode=0775
+      when: inventory_hostname == ping_host
+
+    - name: ./bench.sh
+      shell:
+        nohup ./bench.sh > bench_out.log 2> bench_err.log < /dev/null &
+        chdir={{ dest }}
+      when: inventory_hostname != ping_host
+
+    - name: ./httping.rb
+      shell:
+        nohup ./httping.rb > httping_out.log 2> httping_err.log < /dev/null &
+        chdir={{ dest }}
+      when: inventory_hostname == ping_host
