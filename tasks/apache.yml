@@ -1,6 +1,7 @@
 ---
 - hosts: server
   sudo: yes
+  gather_facts: no
   tasks:
     - name: restart apache
       service:
