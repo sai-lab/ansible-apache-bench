@@ -1,0 +1,13 @@
+---
+- hosts: client
+  gather_facts: no
+  tasks:
+    - name: check bench.sh
+      shell: pgrep bench.sh
+      when: inventory_hostname != ping_host
+      ignore_errors: yes
+
+    - name: check httping.rb
+      shell: pgrep httping.rb
+      when: inventory_hostname == ping_host
+      ignore_errors: yes
