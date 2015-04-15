@@ -1,15 +1,15 @@
 #!/bin/sh
 
 export TZ=JST-9
-rm -f {{ dest }}/bench_time.log
+rm -f {{ dest }}/bench_time.csv
 
 sleep {{ sleep }}s
 ab -n {{ requests }} -c {{ concurrency }} http://{{ host }}/{{ path }} &
 pid=$!
 
-date | awk '{print $4}' | sed 's/^/{{ ansible_eth1.ipv4.address }} start /g' >> {{ dest }}/bench_time.log
+date | awk '{print $4}' | sed 's/^/{{ ansible_eth1.ipv4.address }},start,/g' >> {{ dest }}/bench_time.csv
 
 sleep {{ wait }}s
 kill -9 $pid
 
-date | awk '{print $4}' | sed 's/^/{{ ansible_eth1.ipv4.address }} end   /g' >> {{ dest }}/bench_time.log
+date | awk '{print $4}' | sed 's/^/{{ ansible_eth1.ipv4.address }},end,/g' >> {{ dest }}/bench_time.csv
