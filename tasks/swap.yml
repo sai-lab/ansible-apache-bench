@@ -1,0 +1,10 @@
+---
+- hosts: server
+  sudo: yes
+  gather_facts: no
+  tasks:
+    - name: swapoff -a
+      command: swapoff -a
+
+    # - name: swapon -a
+    #   command: swapon -a
